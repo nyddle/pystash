@@ -102,8 +102,8 @@ class API(object):
             if len(args) > 0 and isinstance(args[0], API):
                 if args[0].check_login() is not None:
                     return fn(*args, **kwargs)
-            #raise Exception('Unknown credentials.\nTry to do stash login at first.\n')
-            output('Unknown credentials.\nTry to do stash login at first.\n', color='yellow')
+            raise Exception('Unknown credentials.\nTry to do stash login at first.\n')
+            #output('Unknown credentials.\nTry to do stash login at first.\n', color='yellow')
         return wrapper
 
     def send_request_decorator(fn):

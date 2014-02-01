@@ -168,7 +168,11 @@ class Stash(object):
                 command = 'get'if command is None else command
         else:
             command = 'help'
-        command_mapping[command]()
+        try:
+            command_mapping[command]()
+        except Exception as inst:
+           output(inst, color="red")
+
         output("\n")
 
     #@catch_errors
