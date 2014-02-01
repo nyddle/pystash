@@ -6,7 +6,7 @@ setup(
     author='Alexander Davydov',
     author_email='nyddle@gmail..com',
     packages=['stash' ],
-    scripts=[ 'bin/stash.py' ],
+    scripts=[ 'bin/stash' ],
     url='http://pypi.python.org/pypi/pystash/',
     license='LICENSE.txt',
     description='Save your code snippets in the cloud.',
