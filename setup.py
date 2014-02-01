@@ -10,7 +10,7 @@ setup(
     url='http://pypi.python.org/pypi/pystash/',
     license='LICENSE.txt',
     description='Save your code snippets in the cloud.',
-    long_description=open('README.txt').read(),
+    long_description=open('README.rst').read(),
     install_requires=[
         "argparse>=1.2.1",
         "args>=0.1.0",
