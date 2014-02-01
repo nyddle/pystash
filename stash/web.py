@@ -7,6 +7,7 @@ import sys
 import os
 import getpass
 from clint.textui import colored
+from common import output
 
 import netrc
 
