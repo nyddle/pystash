@@ -2,7 +2,7 @@
 from requests.auth import AuthBase
 import requests
 import json
-import md5
+import hashlib
 import sys
 import os
 import getpass
@@ -138,7 +138,7 @@ class API(object):
     def login(self, login, password):
         if self.check_login() is not None:
             raise AlreadyLoggedIn
-        m = md5.new()
+        m = hashlib.new()
         m.update(password)
         r = self.get_token(login, password)
         if 'token' in r:
