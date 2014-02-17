@@ -139,9 +139,10 @@ class API(object):
     def login(self, login, password):
         if self.check_login() is not None:
             raise AlreadyLoggedIn
-        m = hashlib.new()
+        m = hashlib.new('md5')
         m.update(password)
         r = self.get_token(login, password)
+        #TODO check if r is an error (remove  / from stash host for example) 
         if 'token' in r:
             # todo: maybe we don't need this two lines?
             self.username = login
