@@ -61,7 +61,7 @@ def catch_errors(fn):
 
 
 class Stash(object):
-    COMMANDS = ('all', 'help', 'delete', 'sync', 'set', 'get', 'login', 'logout')
+    COMMANDS = ('all', 'help', 'delete', 'sync', 'set', 'get', 'login', 'logout', 'status', 'local', 'remote')
     SYNONYMS = {'remove': 'delete', 'rm': 'delete', 'del': 'delete'}
 
     command = None
@@ -91,14 +91,31 @@ class Stash(object):
             os.mkdir(home)
 
     def load_config(self):
-        self.LOCAL = 0
-        self.REMOTE = 1
+
+        # defaults
+        self.REMOTE = 0
+        self.LOCAL = 1
+
         home = os.path.join(os.path.expanduser('~'), '.stash')
         config = home + '/.stash'
         if os.path.exists(config):
-            config = eval("\n".join(open(config, "r").readlines()))
-            for key in config:
-                self.key = config[key]
+            text_config = "\n".join(open(config, "r").readlines())
+            text_config = text_config.strip()
+            config = {}
+            if (text_config):
+                config = eval(text_config)
+                for key in config:
+                    setattr(self, key, config[key])
+
+    def save_config(self):
+
+        conf = { 'LOCAL' : self.LOCAL, 'REMOTE' : self.REMOTE  }
+        home = os.path.join(os.path.expanduser('~'), '.stash')
+        config = home + '/.stash'
+
+        if os.path.exists(config):
+            config_file = open(config, "w")
+            config_file.write(json.dumps(conf))
 
     @staticmethod
     def detect_os():
@@ -129,12 +146,16 @@ class Stash(object):
             'login': self.login,
             'logout': self.logout,
             'all': self.all,
-            'help': self.help
+            'help': self.help,
+            'remote': self.remote,
+            'local': self.local,
+            'status': self.status
         }
 
         piped_data = piped_in()
 
         if self.args.name is not None:
+
             command = None
             if self.args.name.lower() in self.COMMANDS:
                 command = self.args.name.lower()
@@ -150,22 +171,28 @@ class Stash(object):
             else:
                 value = None
 
-            if value is not None:
+            if command in [ 'remote', 'local' ]:
+                if value is not None:
+                    self.value = ''.join(value)
 
-                if command is not None:
-                    # we need to parse value
-                    if len(value) > 1:
-                        self.key = str(value[0])
-                        self.value = value[1:] if self.is_list else ' '.join(value[1:])
-                    else:
-                        self.key = ''.join(value)
-
-                else:
-                    # detect value
-                    self.value = value if self.is_list else ' '.join(value)
-                    command = 'set'
             else:
-                command = 'get'if command is None else command
+
+                if value is not None:
+
+                    if command is not None:
+                        # we need to parse value
+                        if len(value) > 1:
+                            self.key = str(value[0])
+                            self.value = value[1:] if self.is_list else ' '.join(value[1:])
+                        else:
+                            self.key = ''.join(value)
+
+                    else:
+                        # detect value
+                        self.value = value if self.is_list else ' '.join(value)
+                        command = 'set'
+                else:
+                    command = 'get' if command is None else command
         else:
             command = 'help'
         try:
@@ -174,6 +201,38 @@ class Stash(object):
            output(inst, color="red")
 
         output("\n")
+
+    def remote(self):
+
+        if (self.value == '1' or self.value == 'on'):
+            self.REMOTE = 1
+            output("REMOTE set to " + str(self.REMOTE))
+        elif (self.value == '0' or self.value == 'off'):
+            self.REMOTE = 0
+            output("REMOTE set to " + str(self.REMOTE))
+        else:
+            output("Wrong value", color="red")
+        self.save_config()
+
+    def local(self):
+
+        if (self.value == '1' or self.value == 'on'):
+            self.LOCAL = 1
+            output("LOCAL set to " + str(self.LOCAL))
+        elif (self.value == '0' or self.value == 'off'):
+            self.LOCAL = 0
+            output("LOCAL set to " + str(self.LOCAL))
+        else:
+            output("Wrong value", color="red")
+        self.save_config()
+
+
+    def status(self):
+        output("local: " + str(self.LOCAL))
+        output("\n")
+        output("remote: " + str(self.REMOTE))
+        output("\n")
+
 
     #@catch_errors
     def open_stash(self):
@@ -334,7 +393,7 @@ class Stash(object):
                 if res.lower() == 'a':
                     self.api.set(key, value, False, True)
                 else:
-                    outout('Aborted', 'red')
+                    output('Aborted', 'red')
             output('Saved', 'green')
 
     @staticmethod
