@@ -265,6 +265,8 @@ class Stash(object):
         api = API()
         try:
             if api.login(login, password):
+                self.REMOTE = 1
+                self.save_config()
                 output('You have been logged in!\n', 'green')
             else:
                 output('Something went wrong...\n', 'red')
@@ -274,6 +276,8 @@ class Stash(object):
     def logout(self):
         api = API()
         if api.logout():
+            self.REMOTE = 0
+            self.save_config()
             output('Logged out of Stash\n', 'red')
         else:
             output('Something went wrong...\n', 'red')
