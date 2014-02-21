@@ -11,7 +11,9 @@ from common import output
 
 import netrc
 
-STASH_HOST = os.environ['STASH_HOST'] or 'http://getstash.herokuapp.com'
+STASH_HOST = 'http://getstash.herokuapp.com'
+if 'STASH_HOST' in os.environ:
+    STASH_HOST = os.environ['STASH_HOST']
 
 class DuplicateKeyword(Exception):
     """
