@@ -34,17 +34,17 @@ import requests
 
 DB = 'stash.db'
 VERSION = 0.2
-HELP = { 'all' : 'show all keys',  \
-         'help' : 'show this help', \
-         'delete KEY' : 'remove a particular key',\
-         'sync' : 'sync data with the Stash cloud',\
-         'set KEY VALUE' : 'set KEY to VALUE',\
-         'get KEY' : 'retrieve the KEY',\
-         'login': 'login to the Stash cloud',\
-         'logout': 'logout of',\
-         'status': 'show the cloud sync options',\
-         'local [off|on]': 'turn local database on/off',\
-         'remote [off|on]': 'turn the cloud on/off'}
+HELP = {'all': 'show all keys',
+        'help': 'show this help',
+        'delete KEY': 'remove a particular key',
+        'sync': 'sync data with the Stash cloud',
+        'set KEY VALUE': 'set KEY to VALUE',
+        'get KEY': 'retrieve the KEY',
+        'login': 'login to the Stash cloud',
+        'logout': 'logout of',
+        'status': 'show the cloud sync options',
+        'local [off|on]': 'turn local database on/off',
+        'remote [off|on]': 'turn the cloud on/off'}
 
 
 # todo; don't disable stash after first search
@@ -58,6 +58,7 @@ def output(message, color='white', text_only=False):
     else:
         sys.stdout.write(str(getattr(colored, color)(message)))
 """
+
 
 def catch_errors(fn):
     def wrapper(*args, **kwargs):
@@ -122,7 +123,7 @@ class Stash(object):
 
     def save_config(self):
 
-        conf = { 'LOCAL' : self.LOCAL, 'REMOTE' : self.REMOTE  }
+        conf = {'LOCAL': self.LOCAL, 'REMOTE': self.REMOTE}
         home = os.path.join(os.path.expanduser('~'), '.stash')
         config = home + '/.stash'
 
@@ -180,7 +181,7 @@ class Stash(object):
             else:
                 value = None
 
-            if command in [ 'remote', 'local' ]:
+            if command in ['remote', 'local']:
                 if value is not None:
                     self.value = ''.join(value)
 
@@ -207,7 +208,7 @@ class Stash(object):
         try:
             command_mapping[command]()
         except Exception as inst:
-           output(inst, color="red")
+            output(inst, color="red")
 
         output("\n")
 
@@ -235,13 +236,11 @@ class Stash(object):
             output("Wrong value", color="red")
         self.save_config()
 
-
     def status(self):
         output("local: " + str(self.LOCAL))
         output("\n")
         output("remote: " + str(self.REMOTE))
         output("\n")
-
 
     #@catch_errors
     def open_stash(self):
@@ -253,7 +252,7 @@ class Stash(object):
         #self.is_list = self.args.list
         #self.overwrite = self.args.overwrite
         #self.index = self.args.index
-	pass
+        pass
 
     def all(self):
         result = ''
@@ -264,7 +263,6 @@ class Stash(object):
             result += str(v)
             result += '\n'
         output(result) if len(result) > 0 else output('Your stash is empty\n')
-
 
     # the API doesn't have to be there when the use logs in
     def login(self):
@@ -311,16 +309,20 @@ class Stash(object):
 
         item = None
         if self.LOCAL:
-            item = self.db.get(self.key, self.index)
-            if self.numbered:
-                item.numbered = True
-            
+            try:
+                item = self.db.get(self.key, self.index)
+                if self.numbered:
+                    item.numbered = True
+            except KeyError:
+                output('Nothing here.', 'yellow')
+            else:
+                output(item)
 
         elif self.REMOTE:
             key = self.key
             data = self.api.get(key)
-            if data.has_key('result'):
-                if (data['result'] == None):
+            if 'result' in data:
+                if data['result'] is None:
                     output('Nothing here.', 'yellow')
                 else:
                     output(data['result'])
@@ -363,7 +365,7 @@ class Stash(object):
             if self.db.exist(self.key, None):
                 val = self.db.get(self.key)
                 if not self.db.exist(self.key, self.index) and val.is_list and \
-                        self.index != len(val.get_value()):
+                                self.index != len(val.get_value()):
                     raise IndexError
                 else:
 
@@ -377,7 +379,6 @@ class Stash(object):
             else:
                 item = self.db.add(self.key, self.get_value())
                 output('Item has been created\n', 'green')
-
 
         if self.REMOTE:
 
@@ -495,7 +496,6 @@ if __name__ == '__main__':
             usage += "\t{0} \t\t\t# {1}\n".format(key, HELP[key])
         else:
             usage += "\t{0} \t\t\t\t# {1}\n".format(key, HELP[key])
-
 
     parser = argparse.ArgumentParser(usage=usage)
 
