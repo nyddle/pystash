@@ -402,7 +402,26 @@ class Stash(object):
 
     @staticmethod
     def help():
-        output('Here will be help from list\n')
+        HELP = { 'all' : 'show all keys',  \
+                 'help' : 'show this help', \
+                 'delete KEY' : 'remove a particular key',\
+                 'sync' : 'sync data with the Stash cloud',\
+                 'set KEY VALUE' : 'set KEY to VALUE',\
+                 'get KEY' : 'retrieve the KEY',\
+                 'login': 'login to the Stash cloud',\
+                 'logout': 'logout of',\
+                 'status': 'show the cloud sync options',\
+                 'local [off|on]': 'turn local database on/off',\
+                 'remote [off|on]': 'turn the cloud on/off'}
+
+        print "Usage: stash COMMAND"
+        for key in HELP:
+            if len(key) > 6:
+                print("\t{0} \t\t\t# {1}".format(key, HELP[key]))
+            else:
+                print("\t{0} \t\t\t\t# {1}".format(key, HELP[key]))
+
+        output('\n')
 
     def get_value(self):
         """
@@ -478,6 +497,11 @@ class Stash(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+
+    #subparsers = parser.add_subparsers(help='status')
+    #status = subparsers.add_parser('status', help='show local/remote save options')
+
+
     parser.add_argument('name', nargs='?')
     parser.add_argument('value', nargs='*')
 
@@ -485,20 +509,8 @@ if __name__ == '__main__':
                         help="Copy item, but don\'t output it to terminal. Opposite to -p")
 
     parser.add_argument('-p', '--println', action='store_true', help='Print item after action')
-    #parser.add_argument('-i', '--index', nargs='?', type=int, help="Set index (used for lists)")
-    #parser.add_argument('-l', '--list', action='store_true', help="Create list")
-    #parser.add_argument('-a', '--all', action='store_true', help="Create list")
-    #parser.add_argument('-n', '--numbered', action='store_true', help="Set list type to numbered")
     parser.add_argument('-o', '--overwrite', action='store_true', help="Overwrite value if exists")
     parser.add_argument('-r', '--run', action='store_true', help="Run with associated program")
-    #parser.add_argument('-m', '--marked', action='store_true',
-    #                    help="On list creation means list should be marked. On list update - marks all items as done. On element update or create - marks it's completed")
-
-    #parser.add_argument('--push')
-    #parser.add_argument('--pull')
-    #parser.add_argument('--login')
-    #parser.add_argument('--about', nargs='?')
-    #parser.add_argument('--email', nargs='?')
     arg = parser.parse_args()
     Stash(arg).open_stash()
 
