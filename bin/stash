@@ -34,6 +34,19 @@ import requests
 
 DB = 'stash.db'
 VERSION = 0.2
+HELP = { 'all' : 'show all keys',  \
+         'help' : 'show this help', \
+         'delete KEY' : 'remove a particular key',\
+         'sync' : 'sync data with the Stash cloud',\
+         'set KEY VALUE' : 'set KEY to VALUE',\
+         'get KEY' : 'retrieve the KEY',\
+         'login': 'login to the Stash cloud',\
+         'logout': 'logout of',\
+         'status': 'show the cloud sync options',\
+         'local [off|on]': 'turn local database on/off',\
+         'remote [off|on]': 'turn the cloud on/off'}
+
+
 # todo; don't disable stash after first search
 # todo: create storage adapter and find fastest storage
 # todo: fix accept with enter instead yes/no
@@ -402,18 +415,6 @@ class Stash(object):
 
     @staticmethod
     def help():
-        HELP = { 'all' : 'show all keys',  \
-                 'help' : 'show this help', \
-                 'delete KEY' : 'remove a particular key',\
-                 'sync' : 'sync data with the Stash cloud',\
-                 'set KEY VALUE' : 'set KEY to VALUE',\
-                 'get KEY' : 'retrieve the KEY',\
-                 'login': 'login to the Stash cloud',\
-                 'logout': 'logout of',\
-                 'status': 'show the cloud sync options',\
-                 'local [off|on]': 'turn local database on/off',\
-                 'remote [off|on]': 'turn the cloud on/off'}
-
         print "Usage: stash COMMAND"
         for key in HELP:
             if len(key) > 6:
@@ -496,7 +497,16 @@ class Stash(object):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+
+    usage = "stash COMMAND\n"
+    for key in HELP:
+        if len(key) > 6:
+            usage += "\t{0} \t\t\t# {1}\n".format(key, HELP[key])
+        else:
+            usage += "\t{0} \t\t\t\t# {1}\n".format(key, HELP[key])
+
+
+    parser = argparse.ArgumentParser(usage=usage)
 
     #subparsers = parser.add_subparsers(help='status')
     #status = subparsers.add_parser('status', help='show local/remote save options')
@@ -504,13 +514,14 @@ if __name__ == '__main__':
 
     parser.add_argument('name', nargs='?')
     parser.add_argument('value', nargs='*')
-
+    """
     parser.add_argument('-c', '--copy', action='store_true',
                         help="Copy item, but don\'t output it to terminal. Opposite to -p")
 
     parser.add_argument('-p', '--println', action='store_true', help='Print item after action')
     parser.add_argument('-o', '--overwrite', action='store_true', help="Overwrite value if exists")
     parser.add_argument('-r', '--run', action='store_true', help="Run with associated program")
+    """
     arg = parser.parse_args()
     Stash(arg).open_stash()
 
