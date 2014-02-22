@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import sys
 import os
@@ -143,11 +143,7 @@ class Stash(object):
     def validate_args(self):
         # todo: finish
         """Validate args values and pairs"""
-
-        if self.args.println and self.args.copy:
-            raise Exception('Unavailable argument set')
-        if self.index is not None and self.index < 0:
-            raise Exception('Index should be positive')
+        pass
 
     def detect_command(self):
         # todo: code review
@@ -255,8 +251,9 @@ class Stash(object):
 
     def process_args(self):
         #self.is_list = self.args.list
-        self.overwrite = self.args.overwrite
+        #self.overwrite = self.args.overwrite
         #self.index = self.args.index
+	pass
 
     def all(self):
         result = ''
@@ -319,10 +316,7 @@ class Stash(object):
                 item.numbered = True
             if not self.args.copy:
                 output(str(item))
-            if not self.args.println:
-                self.__copy_to_clipboard(str(item))
-                if self.args.copy:
-                    output('Value has been copied to clipboard \n')
+            
 
         elif self.REMOTE:
             key = self.key
@@ -375,7 +369,7 @@ class Stash(object):
                     raise IndexError
                 else:
 
-                    if self.args.overwrite or self.query_yes_no("Are you sure that you want update?") == 'yes':
+                    if self.query_yes_no("Are you sure that you want update?") == 'yes':
                         item = self.db.update(self.key, self.get_value(), self.index, self.args.overwrite)
                         output('Item has been updated\n')
                         if self.args.println:
@@ -385,8 +379,7 @@ class Stash(object):
             else:
                 item = self.db.add(self.key, self.get_value())
                 output('Item has been created\n', 'green')
-                if self.args.println:
-                    output(str(item))
+
 
         if self.REMOTE:
 
