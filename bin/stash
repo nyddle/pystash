@@ -314,8 +314,6 @@ class Stash(object):
             item = self.db.get(self.key, self.index)
             if self.numbered:
                 item.numbered = True
-            if not self.args.copy:
-                output(str(item))
             
 
         elif self.REMOTE:
