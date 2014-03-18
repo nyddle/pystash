@@ -9,6 +9,7 @@ import time
 
 from clint.textui import colored
 
+
 def output(message, color='white', text_only=False):
     if text_only:
         return str(getattr(colored, color)(message))
@@ -122,9 +123,13 @@ class ShelveStorage(AbstractStorage):
     """
     Storage implementation for work with python shelve library
     """
-    DBFILE = 'stash.db'
+    DBFILE = os.path.join(os.path.expanduser('~'), '.stash', 'stash.db')
 
-    def __init__(self):
+    def __init__(self, db_file=None):
+        self.DBFILE = db_file if db_file is not None else self.DBFILE
+        path_to_dir = os.path.join('/', *self.DBFILE.split('/')[1:-1])
+        if not os.path.exists(path_to_dir):
+            os.makedirs(path_to_dir, 0755)
         self.connection = self.get_connection(self.DBFILE)
         if not 'storage' in self.connection:
             self.connection['storage'] = {}
