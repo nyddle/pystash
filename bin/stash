@@ -216,31 +216,49 @@ class Stash(object):
 
         if (self.value == '1' or self.value == 'on'):
             self.REMOTE = 1
+            self.LOCAL = 0
             output("REMOTE set to " + str(self.REMOTE))
         elif (self.value == '0' or self.value == 'off'):
             self.REMOTE = 0
+            self.LOCAL = 1
             output("REMOTE set to " + str(self.REMOTE))
         else:
-            output("Wrong value", color="red")
+            self.REMOTE = 1
+            self.LOCAL = 0
+            output("REMOTE set to " + str(self.REMOTE))
+
+            #output("Wrong value", color="red")
         self.save_config()
 
     def local(self):
 
         if (self.value == '1' or self.value == 'on'):
             self.LOCAL = 1
+            self.REMOTE = 0
             output("LOCAL set to " + str(self.LOCAL))
         elif (self.value == '0' or self.value == 'off'):
             self.LOCAL = 0
+            self.REMOTE = 1
             output("LOCAL set to " + str(self.LOCAL))
         else:
-            output("Wrong value", color="red")
+            self.LOCAL = 1
+            self.REMOTE = 0
+            output("LOCAL set to " + str(self.LOCAL))
+
+            #output("Wrong value", color="red")
         self.save_config()
 
     def status(self):
+        """
         output("local: " + str(self.LOCAL))
         output("\n")
         output("remote: " + str(self.REMOTE))
         output("\n")
+        """
+        if self.LOCAL:
+            output("local")
+        else:
+            output("remote")
 
     #@catch_errors
     def open_stash(self):
@@ -314,7 +332,7 @@ class Stash(object):
                 if self.numbered:
                     item.numbered = True
             except KeyError:
-                output('Nothing here.', 'yellow')
+                output('Nothing here. (local)', 'yellow')
             else:
                 output(item)
 
@@ -323,11 +341,11 @@ class Stash(object):
             data = self.api.get(key)
             if 'result' in data:
                 if data['result'] is None:
-                    output('Nothing here.', 'yellow')
+                    output('Nothing here. (remote)', 'yellow')
                 else:
                     output(data['result'])
             else:
-                output('Nothing here.', 'yellow')
+                output('Nothing here. (remote)', 'yellow')
 
     def __copy_to_clipboard(self, value):
         val = Popen(('echo', value.strip('\n')), stdout=PIPE)
@@ -339,28 +357,21 @@ class Stash(object):
             if self.db.exist(self.key, self.index):
                 if self.query_yes_no("Are you sure?", default="no") == "yes":
                     self.db.delete(self.key, self.index)
-                    output('Item has been deleted \n')
+                    output('Item has been deleted (local)\n')
                 else:
                     # todo: create message mapping
-                    output('Aborted\n', 'yellow')
+                    output('Aborted (local)\n', 'yellow')
             else:
-                output('Item doesn\'t exists\n', 'red')
+                output('Item doesn\'t exists (local)\n', 'red')
 
         if self.REMOTE:
             # todo: on delete check if key exists
             key = self.key
             response = self.api.delete(key)
-            output('%s has been deleted' % key)
+            output('%s has been deleted (remote)' % key)
 
     def add_or_update(self):
-        """
-        Possible args:
-          -o
-          -l
-          -i
-          -n
-          -s
-        """
+
         if self.LOCAL:
             if self.db.exist(self.key, None):
                 val = self.db.get(self.key)
@@ -371,14 +382,14 @@ class Stash(object):
 
                     if self.query_yes_no("Are you sure that you want update?") == 'yes':
                         item = self.db.update(self.key, self.get_value(), self.index, self.args.overwrite)
-                        output('Item has been updated\n')
+                        output('Item has been updated (local)\n')
                         if self.args.println:
                             output(str(item))
                     else:
-                        output('Aborted \n', 'red')
+                        output('Aborted (local)\n', 'red')
             else:
                 item = self.db.add(self.key, self.get_value())
-                output('Item has been created\n', 'green')
+                output('Item has been created (local)\n', 'green')
 
         if self.REMOTE:
 
@@ -402,8 +413,8 @@ class Stash(object):
                 if res.lower() == 'a':
                     self.api.set(key, value, False, True)
                 else:
-                    output('Aborted', 'red')
-            output('Saved', 'green')
+                    output('Aborted (remote)', 'red')
+            output('Saved (remote)', 'green')
 
     @staticmethod
     def help():
