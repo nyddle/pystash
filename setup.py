@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='stash',
-    version='0.0.3',
+    version='0.0.4',
     author='Alexander Davydov',
     author_email='nyddle@gmail..com',
     packages=['stash' ],
@@ -12,7 +12,6 @@ setup(
     description='Save your code snippets in the cloud.',
     long_description=open('README.rst').read(),
     install_requires=[
-        "argparse>=1.2.1",
         "args>=0.1.0",
         "clint>=0.3.3",
         "requests>=2.2.0",
