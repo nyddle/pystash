@@ -413,6 +413,7 @@ class Stash(object):
                     self.api.set(key, value, True, False)
                     output('Key overwritten (remote)', 'green')
                 elif res.lower() == 'a':
+                    #TODO: what's up with output here???
                     output('Appended data (remote)', 'green')
                     self.api.set(key, value, False, True)
                 else:
