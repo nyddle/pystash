@@ -408,13 +408,15 @@ class Stash(object):
                 #TODO
                 if res.lower() == 'y':
                     self.api.set(key, value, True, False)
-                if res.lower() == 'o':
+                    output('Key overwritten (remote)', 'green')
+                elif res.lower() == 'o':
                     self.api.set(key, value, True, False)
-                if res.lower() == 'a':
+                    output('Key overwritten (remote)', 'green')
+                elif res.lower() == 'a':
+                    output('Appended data (remote)', 'green')
                     self.api.set(key, value, False, True)
                 else:
                     output('Aborted (remote)', 'red')
-            output('Saved (remote)', 'green')
 
     @staticmethod
     def help():
