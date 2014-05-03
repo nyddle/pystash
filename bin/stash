@@ -381,9 +381,9 @@ class Stash(object):
                 else:
 
                     if self.query_yes_no("Are you sure that you want update?") == 'yes':
-                        item = self.db.update(self.key, self.get_value(), self.index, self.args.overwrite)
+                        item = self.db.update(self.key, self.get_value(), self.index, True)
                         output('Item has been updated (local)\n')
-                        if self.args.println:
+                        if True:
                             output(str(item))
                     else:
                         output('Aborted (local)\n', 'red')
