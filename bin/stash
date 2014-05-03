@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/home/arusanov/Projects/.virtualenvs/stash2/bin/python
 # -*- coding: utf-8 -*-
 import sys
 import os
@@ -111,7 +111,7 @@ class Stash(object):
         self.LOCAL = 1
 
         home = os.path.join(os.path.expanduser('~'), '.stash')
-        config = home + '/.stash'
+        config = home + 'conf'
         if os.path.exists(config):
             text_config = "\n".join(open(config, "r").readlines())
             text_config = text_config.strip()
@@ -122,12 +122,10 @@ class Stash(object):
                     setattr(self, key, config[key])
 
     def save_config(self):
-
         conf = {'LOCAL': self.LOCAL, 'REMOTE': self.REMOTE}
         home = os.path.join(os.path.expanduser('~'), '.stash')
-        config = home + '/.stash'
-
-        if os.path.exists(config):
+        config = home + 'conf'
+        if os.path.exists(home):
             config_file = open(config, "w")
             config_file.write(json.dumps(conf))
 
@@ -235,18 +233,17 @@ class Stash(object):
         if (self.value == '1' or self.value == 'on'):
             self.LOCAL = 1
             self.REMOTE = 0
-            output("LOCAL set to " + str(self.LOCAL))
+            
         elif (self.value == '0' or self.value == 'off'):
             self.LOCAL = 0
             self.REMOTE = 1
-            output("LOCAL set to " + str(self.LOCAL))
+            
         else:
             self.LOCAL = 1
             self.REMOTE = 0
-            output("LOCAL set to " + str(self.LOCAL))
-
-            #output("Wrong value", color="red")
+            
         self.save_config()
+        output("LOCAL set to " + str(self.LOCAL))
 
     def status(self):
         """
@@ -255,7 +252,7 @@ class Stash(object):
         output("remote: " + str(self.REMOTE))
         output("\n")
         """
-        if self.LOCAL:
+        if self.LOCAL > 0:
             output("local")
         else:
             output("remote")
@@ -519,14 +516,14 @@ if __name__ == '__main__':
 
     parser.add_argument('name', nargs='?')
     parser.add_argument('value', nargs='*')
-    """
-    parser.add_argument('-c', '--copy', action='store_true',
-                        help="Copy item, but don\'t output it to terminal. Opposite to -p")
-
-    parser.add_argument('-p', '--println', action='store_true', help='Print item after action')
-    parser.add_argument('-o', '--overwrite', action='store_true', help="Overwrite value if exists")
-    parser.add_argument('-r', '--run', action='store_true', help="Run with associated program")
-    """
+    # """
+    # parser.add_argument('-c', '--copy', action='store_true',
+    #                     help="Copy item, but don\'t output it to terminal. Opposite to -p")
+    #
+    # parser.add_argument('-p', '--println', action='store_true', help='Print item after action')
+    # parser.add_argument('-o', '--overwrite', action='store_true', help="Overwrite value if exists")
+    # parser.add_argument('-r', '--run', action='store_true', help="Run with associated program")
+    # """
     arg = parser.parse_args()
     Stash(arg).open_stash()
 
