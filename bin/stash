@@ -298,7 +298,7 @@ class Stash(object):
         print "Data from db", local_data
         #print self.db.get_database_data()
         #r = requests.post("http://127.0.0.1/sync", data=self.db.get_database_data())
-        r = requests.post("http://localhost:5000/sync", data=json.dumps(local_data))
+        r = requests.post("http://trystash.com/sync", data=json.dumps(local_data))
         synced_data = r.json()
         print 'synced data: '
         print synced_data
