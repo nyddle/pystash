@@ -38,7 +38,7 @@ class WrongKey(Exception):
 
 class NoInternetConnection(Exception):
     """
-    Not Internet connection or server not available
+    No Internet connection or server not available
     """
     pass
 
