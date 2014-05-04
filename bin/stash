@@ -319,7 +319,7 @@ class Stash(object):
         #print 'synced data: '
         #print synced_data
         #self.db.set_database_data(synced_data)
-        output('Synced.)
+        output('Synced.')
 
     def get_item_or_index(self):
 
