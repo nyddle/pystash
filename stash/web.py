@@ -215,8 +215,8 @@ class API(object):
 
     @login_decorator
     @send_request_decorator
-    def sync(self, db_data):
-        return db_data
+    def sync(self, local_db_data):
+        return { 'sync' : local_db_data }
 
     @send_request_decorator
     def get_token(self, username, password):
