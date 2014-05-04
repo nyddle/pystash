@@ -310,15 +310,16 @@ class Stash(object):
         #some_data = api.sync(self.db.get_database_data())
         local_data = self.db.get_database_data()
         # todo: remove! it's temporary stuff
-        print "Data from db", local_data
+        #print "Data from db", local_data
         #print self.db.get_database_data()
         #r = requests.post("http://127.0.0.1/sync", data=self.db.get_database_data())
         r = requests.post("http://trystash.com/sync", data=json.dumps(local_data))
         synced_data = r.json()
-        print 'synced data: '
-        print synced_data
+        self.db.add_dict(synced_data)
+        #print 'synced data: '
+        #print synced_data
         #self.db.set_database_data(synced_data)
-        print 'Synced!!!'
+        output('Synced.)
 
     def get_item_or_index(self):
 

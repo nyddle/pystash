@@ -182,6 +182,14 @@ class ShelveStorage(AbstractStorage):
         self.last_update = int(time.time())
         return StashedItem(self.db[key])
 
+    def add_dict(self, newdict):
+        self.db.clear()
+        for key in newdict:
+            self.db[key] = newdict[key]
+        self.last_update = int(time.time())
+        return
+
+
     def exist(self, item_name, index=None):
         if item_name in self.db:
             if index is not None:
