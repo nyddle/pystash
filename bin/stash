@@ -270,9 +270,16 @@ class Stash(object):
         pass
 
     def all(self):
+        db = {}
+        if self.LOCAL:
+            output('(local)\n')
+            db = self.db.get_all()
+        if self.REMOTE:
+            output('(remote)\n')
+            db = self.api.all()
         result = ''
-        for k, v in self.db.get_all().iteritems():
-            result += '%s:\n' % k if v.is_list else '%s: ' % k
+        for k, v in db.iteritems():
+            result += '%s: ' % k
             if self.numbered:
                 v.numbered = True
             result += str(v)

@@ -2,9 +2,9 @@ from distutils.core import setup
 
 setup(
     name='stash',
-    version='0.0.4',
+    version='0.0.5',
     author='Alexander Davydov',
-    author_email='nyddle@gmail..com',
+    author_email='nyddle@gmail.com',
     packages=['stash' ],
     scripts=[ 'bin/stash' ],
     url='http://pypi.python.org/pypi/pystash/',
