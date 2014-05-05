@@ -329,7 +329,6 @@ class Stash(object):
         if self.LOCAL:
             try:
                 item = self.db.get(self.key, self.index)
-                xerox.copy(str(item))
                 if self.numbered:
                     item.numbered = True
             except KeyError:
@@ -346,6 +345,7 @@ class Stash(object):
                     output('Nothing here. (remote)', 'yellow')
                 else:
                     output(data['result'])
+                    xerox.copy(data['result'])
             else:
                 output('Nothing here. (remote)', 'yellow')
 
