@@ -1,4 +1,4 @@
-#!/home/arusanov/Projects/.virtualenvs/stash2/bin/python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import sys
 import os
@@ -16,6 +16,7 @@ from stash.web import API, AlreadyLoggedIn
 import getpass
 
 import requests
+import xerox
 
 # todo: create groups or subcommands
 # todo: index should be positive int
@@ -328,12 +329,14 @@ class Stash(object):
         if self.LOCAL:
             try:
                 item = self.db.get(self.key, self.index)
+                xerox.copy(str(item))
                 if self.numbered:
                     item.numbered = True
             except KeyError:
                 output('Nothing here. (local)', 'yellow')
             else:
                 output(item)
+                xerox.copy(str(item))
 
         elif self.REMOTE:
             key = self.key
