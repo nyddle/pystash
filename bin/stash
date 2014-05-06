@@ -66,7 +66,7 @@ def catch_errors(fn):
         try:
             return fn(*args, **kwargs)
         except (IndexError, KeyError):
-            output("Item doesn't exists \n", 'red')
+            output("Item doesn't exist \n", 'red')
         except NotListException:
             output("Item isn't a list \n", 'red')
         except Exception, e:
@@ -364,7 +364,7 @@ class Stash(object):
                     # todo: create message mapping
                     output('Aborted (local)\n', 'yellow')
             else:
-                output('Item doesn\'t exists (local)\n', 'red')
+                output('Item doesn\'t exist (local)\n', 'red')
 
         if self.REMOTE:
             # todo: on delete check if key exists
@@ -437,7 +437,7 @@ class Stash(object):
         Format value
         """
         if self.value is None:
-            raise Exception("Value doesn't set")
+            raise Exception("Value isn't set")
         if self.is_list:
             value = self.value if isinstance(self.value, list) else [self.value]
         else:
