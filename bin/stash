@@ -198,7 +198,7 @@ class Stash(object):
 
                     else:
                         # detect value
-                        self.value = value if self.is_list else ' '.join(value)
+                        self.value = value if isinstance(value, str) else ' '.join(value)
                         command = 'set'
                 else:
                     command = 'get' if command is None else command
