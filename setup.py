@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='stash',
-    version='0.0.7',
+    version='0.0.8',
     author='Alexander Davydov',
     author_email='nyddle@gmail.com',
     packages=['stash' ],
