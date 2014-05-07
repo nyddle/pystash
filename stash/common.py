@@ -35,8 +35,37 @@ class StashedItem():
             self.elem['value'][self.index] if not 'marked' in self.elem['meta'] else self.elem['value'][self.index][0]
 
     def __repr__(self):
-        result = self.elem['value']
+        if self.is_list:
+            if 'marked' in self.elem['meta']:
+                # it will be uncommented after implementing marked lists
+                #result = self.__assemble_marked_list()
+                result = self.__assemble_unmarked_list()
+            else:
+                result = self.__assemble_unmarked_list()
+        else:
+            result = self.elem['value']
         return '%s\n' % result
+
+    def __assemble_marked_list(self):
+        result = []
+        template = '{mark} {data}'
+        for item in self.elem['value']:
+            mark = '+' if item[1] else '-'
+            result.append(template.format(mark=mark, data=item[0]))
+        return self.list_to_string(result, self.numbered)
+
+    def __assemble_unmarked_list(self):
+        result = []
+        for item in self.elem['value']:
+            result.append(item)
+        return self.list_to_string(result, self.numbered)
+
+    @staticmethod
+    def list_to_string(items, is_numbered):
+        if is_numbered:
+            return '\n'.join(['{}. {}'.format(n+1, item) for n, item in enumerate(items)])
+        else:
+            return '\n'.join(items)
 
 
 class AbstractStorage(object):
