@@ -100,6 +100,7 @@ class Stash(object):
         netrc_path = os.path.join(os.path.expanduser('~'), '.netrc')
         if not os.path.exists(netrc_path):
             open(netrc_path, 'w').close()
+            os.chmod(600, netrc_path)
 
         home = os.path.join(os.path.expanduser('~'), '.stash')
         if not os.path.exists(home):

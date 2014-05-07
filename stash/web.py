@@ -12,6 +12,7 @@ from common import output
 import netrc
 
 STASH_HOST = 'http://getstash.herokuapp.com'
+
 if 'STASH_HOST' in os.environ:
     STASH_HOST = os.environ['STASH_HOST']
 
