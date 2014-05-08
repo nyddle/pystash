@@ -90,9 +90,9 @@ class Stash(object):
     def __init__(self, args):
         #self.check_installation()
         self.args = args
-        self.db = ShelveStorage()
-        self.os = self.detect_os()
         self.load_config()
+        self.db = ShelveStorage(db_file=self.DBFILE)
+        self.os = self.detect_os()
         if self.REMOTE:
             self.api = API()
 
@@ -111,6 +111,7 @@ class Stash(object):
         # defaults
         self.REMOTE = 0
         self.LOCAL = 1
+        self.DBFILE = os.path.join(os.path.expanduser('~'), '.stash', 'stash.db')
 
         home = os.path.join(os.path.expanduser('~'), '.stash')
         config = home + 'conf'
