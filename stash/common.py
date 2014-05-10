@@ -161,7 +161,7 @@ class ShelveStorage(AbstractStorage):
                 self.db[item_name]['value'].append(value)
             else:
                 self.db[item_name]['value'] = value
-        self.db[item_name]['last_update'] = int(time.time())
+        self.db[item_name]['updated'] = int(time.time())
         self.last_update = int(time.time())
         return StashedItem(self.db[item_name], index)
 
@@ -171,7 +171,7 @@ class ShelveStorage(AbstractStorage):
             if not isinstance(self.db[item_name]['value'], list):
                 raise NotListException
             self.db[item_name]['value'].pop(index)
-            self.db[item_name]['value']['last_update'] = int(time.time())
+            self.db[item_name]['value']['updated'] = int(time.time())
         else:
             del self.db[item_name]
         self.last_update = int(time.time())
