@@ -299,6 +299,7 @@ class Stash(object):
         try:
             if api.login(login, password):
                 self.REMOTE = 1
+                self.LOCAL = 0
                 self.save_config()
                 output('You have been logged in!\n', 'green')
             else:
