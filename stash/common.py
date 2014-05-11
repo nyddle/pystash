@@ -236,6 +236,15 @@ class ShelveStorage(AbstractStorage):
                     result[k] = StashedItem(v)
         return result
 
+    def alltags(self):
+        result = []
+        for k, v in self.db.iteritems():
+            if 'tags' in v:
+                for tag in v['tags']:
+                    result.append(tag)
+        return result
+
+
 
     def get_database_data(self):
         return dict(self.connection)

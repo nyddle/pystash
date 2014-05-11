@@ -128,7 +128,7 @@ class Stash(object):
         conf = {'LOCAL': self.LOCAL, 'REMOTE': self.REMOTE}
         home = os.path.join(os.path.expanduser('~'), '.stash')
         config = home + 'conf'
-        if os.path.exists(home):
+        if os.path.tagexists(home):
             config_file = open(config, "w")
             config_file.write(json.dumps(conf))
 
@@ -294,22 +294,37 @@ class Stash(object):
 
 
     def tags(self):
-        db = {}
-        if self.LOCAL:
-            output('(local)\n')
-            db = self.db.get_all()
-        if self.REMOTE:
-            output('(remote)\n')
-            db = self.api.all()
-        result = ''
-        for k, v in db.iteritems():
-            result += '%s: ' % k
-            if self.numbered:
-                v.numbered = True
-            result += str(v)
-            result += '\n'
-        output(result) if len(result) > 0 else output('Your stash is empty\n')
 
+        if self.key:
+
+            db = {}
+            if self.LOCAL:
+                output('(local)\n')
+                db = self.db.tags(self.key)
+            if self.REMOTE:
+                output('(remote)\n')
+                db = self.api.all()
+            result = ''
+            for k, v in db.iteritems():
+                result += '%s: ' % k
+                if self.numbered:
+                    v.numbered = True
+                result += str(v)
+                result += '\n'
+            output(result) if len(result) > 0 else output('No items found.\n')
+        else:
+            db = {}
+            if self.LOCAL:
+                output('(local)\n')
+                db = self.db.alltags()
+            if self.REMOTE:
+                output('(remote)\n')
+                db = self.api.all()
+            result = ''
+            for tag in db:
+                result += '%s' % tag
+                result += '\n'
+            output(result) if len(result) > 0 else output('No tags found.\n')
 
     # the API doesn't have to be there when the use logs in
     def login(self):
