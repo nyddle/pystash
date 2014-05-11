@@ -24,6 +24,10 @@ class StashedItem():
     def __init__(self, elem, index=None, numbered=False):
         self.elem = elem
         self.value = elem['value']
+        if 'tags' in elem:
+            self.tags = elem['tags']
+        else:
+            self.tags = []
         self.is_list = isinstance(elem['value'], list)
         if (index is not None and not self.is_list) or len(elem['value']) <= index:
             raise IndexError
@@ -33,6 +37,13 @@ class StashedItem():
     def get_value(self):
         return self.elem['value'] if not self.index else \
             self.elem['value'][self.index] if not 'marked' in self.elem['meta'] else self.elem['value'][self.index][0]
+
+    def get_tags(self):
+        if 'tags' in self.elem:
+            return self.elem['tags']
+        else:
+            return []
+
 
     def __repr__(self):
         if self.is_list:
@@ -144,7 +155,7 @@ class ShelveStorage(AbstractStorage):
     def get_connection(self, db):
         return shelve.open(db, writeback=True)
 
-    def update(self, item_name, value, index=None, overwrite=False):
+    def update(self, item_name, value, tags, index=None, overwrite=False):
         if index is not None:
             index -= 1
             item = self.db[item_name]['value']
@@ -159,9 +170,12 @@ class ShelveStorage(AbstractStorage):
         else:
             if isinstance(self.db[item_name]['value'], list) and not overwrite:
                 self.db[item_name]['value'].append(value)
+                self.db[item_name]['tags'].append(tags)
             else:
                 self.db[item_name]['value'] = value
+                self.db[item_name]['tags'] = tags
         self.db[item_name]['updated'] = int(time.time())
+        #self.db[item_name]['tags'] = tags
         self.last_update = int(time.time())
         return StashedItem(self.db[item_name], index)
 
@@ -213,6 +227,15 @@ class ShelveStorage(AbstractStorage):
         for k, v in self.db.iteritems():
             result[k] = StashedItem(v)
         return result
+
+    def tags(self, tag):
+        result = {}
+        for k, v in self.db.iteritems():
+            if 'tags' in v:
+                if tag in v['tags']:
+                    result[k] = StashedItem(v)
+        return result
+
 
     def get_database_data(self):
         return dict(self.connection)
