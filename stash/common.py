@@ -245,7 +245,6 @@ class ShelveStorage(AbstractStorage):
         return result
 
 
-
     def get_database_data(self):
         return dict(self.connection)
 
