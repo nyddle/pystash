@@ -128,7 +128,7 @@ class Stash(object):
         conf = {'LOCAL': self.LOCAL, 'REMOTE': self.REMOTE}
         home = os.path.join(os.path.expanduser('~'), '.stash')
         config = home + 'conf'
-        if os.path.tagexists(home):
+        if os.path.exists(home):
             config_file = open(config, "w")
             config_file.write(json.dumps(conf))
 
@@ -440,8 +440,9 @@ class Stash(object):
 
             key = self.key
             value = self.get_value()
+            tags = self.tags
 
-            data = self.api.set(key, value)
+            data = self.api.set(key, value, tags)
             if data.has_key('error'):
                 return colored.yellow(data['error'])
 
@@ -452,15 +453,15 @@ class Stash(object):
                 #while res.lower() != 'y' and res.lower() != 'n':
                 #TODO
                 if res.lower() == 'y':
-                    self.api.set(key, value, True, False)
+                    self.api.set(key, value, tags, True, False)
                     output('Key overwritten (remote)', 'green')
                 elif res.lower() == 'o':
-                    self.api.set(key, value, True, False)
+                    self.api.set(key, value, tags, True, False)
                     output('Key overwritten (remote)', 'green')
                 elif res.lower() == 'a':
                     #TODO: what's up with output here???
                     output('Appended data (remote)', 'green')
-                    self.api.set(key, value, False, True)
+                    self.api.set(key, value, tags, False, True)
                 else:
                     output('Aborted (remote)', 'red')
 
