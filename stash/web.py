@@ -205,6 +205,12 @@ class API(object):
 
     @send_request_decorator
     @login_decorator
+    def gettags(self):
+        return {'gettags': True}
+
+
+    @send_request_decorator
+    @login_decorator
     def push(self, list_title, value):
         return {'push': {list_title: value}}
 
