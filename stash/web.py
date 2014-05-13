@@ -208,6 +208,10 @@ class API(object):
     def gettags(self):
         return {'gettags': True}
 
+    @send_request_decorator
+    @login_decorator
+    def tags(self, key):
+        return {'tags': key }
 
     @send_request_decorator
     @login_decorator
