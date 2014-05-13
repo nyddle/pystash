@@ -76,8 +76,8 @@ def catch_errors(fn):
 
 
 class Stash(object):
-    COMMANDS = ('all', 'help', 'delete', 'sync', 'set', 'get', 'login', 'logout', 'status', 'local', 'remote')
-    SYNONYMS = {'remove': 'delete', 'rm': 'delete', 'del': 'delete'}
+    COMMANDS = ('all', 'help', 'delete', 'sync', 'set', 'get', 'login', 'logout', 'status', 'local', 'remote', 'search')
+    SYNONYMS = {'remove': 'delete', 'rm': 'delete', 'del': 'delete', 'search' : 'find'}
 
     command = None
     key = None
@@ -160,7 +160,8 @@ class Stash(object):
             'help': self.help,
             'remote': self.remote,
             'local': self.local,
-            'status': self.status
+            'status': self.status,
+            'search': self.search
         }
 
         piped_data = piped_in()
@@ -349,6 +350,26 @@ class Stash(object):
                 else:
                     output(data['result'])
                     xerox.copy(data['result'])
+            else:
+                output('Nothing here. (remote)', 'yellow')
+
+    def search(self):
+
+        item = None
+
+        if self.LOCAL:
+            output('Search is only available for remote mode. (remote)', 'yellow')
+
+        elif self.REMOTE:
+
+            key = self.key
+            data = self.api.search(key)
+            if 'result' in data:
+                if data['result'] is None:
+                    output('Nothing here. (remote)', 'yellow')
+                else:
+                    for result in data['result']:
+                        output("%s:\n%s" % (result['key'], result['value']))
             else:
                 output('Nothing here. (remote)', 'yellow')
 

@@ -190,6 +190,12 @@ class API(object):
 
     @send_request_decorator
     @login_decorator
+    def search(self, key):
+        return {'search': key}
+
+
+    @send_request_decorator
+    @login_decorator
     def set(self, key, value, overwrite=False,append=False):
         return {'set': {key: value}, 'overwrite': overwrite,'append':append}
 
