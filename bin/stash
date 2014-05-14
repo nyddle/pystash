@@ -488,6 +488,10 @@ class Stash(object):
                     self.api.set(key, value, tags, False, True)
                 else:
                     output('Aborted (remote)', 'red')
+            else:
+                output('Item has been created (remote)', 'green')
+
+
 
     @staticmethod
     def help():
