@@ -412,7 +412,7 @@ class Stash(object):
                     output('Nothing here. (remote)', 'yellow')
                 else:
                     for result in data['result']:
-                        output("%s:\n%s" % (result['key'], result['value']))
+                        output("%s:\n%s\n\n" % (result['key'], result['value']))
             else:
                 output('Nothing here. (remote)', 'yellow')
 
