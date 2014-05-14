@@ -77,7 +77,7 @@ def catch_errors(fn):
 
 
 class Stash(object):
-    COMMANDS = ('all', 'help', 'delete', 'sync', 'set', 'get', 'login', 'logout', 'status', 'local', 'remote', 'search')
+    COMMANDS = ('all', 'help', 'delete', 'sync', 'set', 'get', 'login', 'logout', 'status', 'local', 'remote', 'search', 'tags')
     SYNONYMS = {'remove': 'delete', 'rm': 'delete', 'del': 'delete', 'search' : 'find'}
 
     command = None
@@ -162,10 +162,16 @@ class Stash(object):
             'remote': self.remote,
             'local': self.local,
             'status': self.status,
-            'search': self.search
+            'search': self.search,
+            'tags': self.tags
         }
 
         piped_data = piped_in()
+
+        tags = []
+        if self.args.tags is not None:
+            tags = self.args.tags.split(',')
+            self.tags = tags
 
         if self.args.name is not None:
 
@@ -238,15 +244,12 @@ class Stash(object):
         if (self.value == '1' or self.value == 'on'):
             self.LOCAL = 1
             self.REMOTE = 0
-            
         elif (self.value == '0' or self.value == 'off'):
             self.LOCAL = 0
             self.REMOTE = 1
-            
         else:
             self.LOCAL = 1
             self.REMOTE = 0
-            
         self.save_config()
         output("LOCAL set to " + str(self.LOCAL))
 
@@ -290,6 +293,40 @@ class Stash(object):
             result += str(v)
             result += '\n'
         output(result) if len(result) > 0 else output('Your stash is empty\n')
+
+
+    def tags(self):
+
+        if self.key:
+
+            db = {}
+            if self.LOCAL:
+                output('(local)\n')
+                db = self.db.tags(self.key)
+            if self.REMOTE:
+                output('(remote)\n')
+                db = self.api.all()
+            result = ''
+            for k, v in db.iteritems():
+                result += '%s: ' % k
+                if self.numbered:
+                    v.numbered = True
+                result += str(v)
+                result += '\n'
+            output(result) if len(result) > 0 else output('No items found.\n')
+        else:
+            db = {}
+            if self.LOCAL:
+                output('(local)\n')
+                db = self.db.alltags()
+            if self.REMOTE:
+                output('(remote)\n')
+                db = self.api.all()
+            result = ''
+            for tag in db:
+                result += '%s' % tag
+                result += '\n'
+            output(result) if len(result) > 0 else output('No tags found.\n')
 
     # the API doesn't have to be there when the use logs in
     def login(self):
@@ -339,6 +376,9 @@ class Stash(object):
             except KeyError:
                 output('Nothing here. (local)', 'yellow')
             else:
+                #DEBUG
+                if item.tags:
+                    output("Tags: %s\n" % " ".join(item.tags))
                 output(item)
                 xerox.copy(str(item))
 
@@ -408,22 +448,23 @@ class Stash(object):
                 else:
 
                     if self.query_yes_no("Are you sure that you want update?") == 'yes':
-                        item = self.db.update(self.key, self.get_value(), self.index, True)
+                        item = self.db.update(self.key, self.get_value(), self.tags, self.index, True)
                         output('Item has been updated (local)\n')
                         if True:
                             output(str(item))
                     else:
                         output('Aborted (local)\n', 'red')
             else:
-                item = self.db.add(self.key, self.get_value())
+                item = self.db.add(self.key, self.get_value(), self.tags)
                 output('Item has been created (local)\n', 'green')
 
         if self.REMOTE:
 
             key = self.key
             value = self.get_value()
+            tags = self.tags
 
-            data = self.api.set(key, value)
+            data = self.api.set(key, value, tags)
             if data.has_key('error'):
                 return colored.yellow(data['error'])
 
@@ -434,15 +475,15 @@ class Stash(object):
                 #while res.lower() != 'y' and res.lower() != 'n':
                 #TODO
                 if res.lower() == 'y':
-                    self.api.set(key, value, True, False)
+                    self.api.set(key, value, tags, True, False)
                     output('Key overwritten (remote)', 'green')
                 elif res.lower() == 'o':
-                    self.api.set(key, value, True, False)
+                    self.api.set(key, value, tags, True, False)
                     output('Key overwritten (remote)', 'green')
                 elif res.lower() == 'a':
                     #TODO: what's up with output here???
                     output('Appended data (remote)', 'green')
-                    self.api.set(key, value, False, True)
+                    self.api.set(key, value, tags, False, True)
                 else:
                     output('Aborted (remote)', 'red')
 
@@ -546,6 +587,7 @@ if __name__ == '__main__':
 
     parser.add_argument('name', nargs='?')
     parser.add_argument('value', nargs='*')
+    parser.add_argument('-t', '--tag', dest='tags', help="Add tag")
     # """
     # parser.add_argument('-c', '--copy', action='store_true',
     #                     help="Copy item, but don\'t output it to terminal. Opposite to -p")

@@ -196,8 +196,8 @@ class API(object):
 
     @send_request_decorator
     @login_decorator
-    def set(self, key, value, overwrite=False,append=False):
-        return {'set': {key: value}, 'overwrite': overwrite,'append':append}
+    def set(self, key, value, tags, overwrite=False,append=False):
+        return {'set': { key: value }, 'tags' : tags, 'overwrite': overwrite, 'append' : append}
 
     @send_request_decorator
     @login_decorator
@@ -208,6 +208,16 @@ class API(object):
     @login_decorator
     def all(self):
         return {'getkeys': True}
+
+    @send_request_decorator
+    @login_decorator
+    def gettags(self):
+        return {'gettags': True}
+
+    @send_request_decorator
+    @login_decorator
+    def tags(self, key):
+        return {'tags': key }
 
     @send_request_decorator
     @login_decorator
