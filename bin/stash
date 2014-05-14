@@ -94,6 +94,7 @@ class Stash(object):
         self.load_config()
         self.db = ShelveStorage(db_file=self.DBFILE)
         self.os = self.detect_os()
+        self.ltags = []
         if self.REMOTE:
             self.api = API()
 
@@ -171,7 +172,7 @@ class Stash(object):
         tags = []
         if self.args.tags is not None:
             tags = self.args.tags.split(',')
-            self.tags = tags
+            self.ltags = tags
 
         if self.args.name is not None:
 
@@ -449,21 +450,21 @@ class Stash(object):
                 else:
 
                     if self.query_yes_no("Are you sure that you want update?") == 'yes':
-                        item = self.db.update(self.key, self.get_value(), self.tags, self.index, True)
+                        item = self.db.update(self.key, self.get_value(), self.ltags, self.index, True)
                         output('Item has been updated (local)\n')
                         if True:
                             output(str(item))
                     else:
                         output('Aborted (local)\n', 'red')
             else:
-                item = self.db.add(self.key, self.get_value(), self.tags)
+                item = self.db.add(self.key, self.get_value(), self.ltags)
                 output('Item has been created (local)\n', 'green')
 
         if self.REMOTE:
 
             key = self.key
             value = self.get_value()
-            tags = self.tags
+            tags = self.ltags
 
             data = self.api.set(key, value, tags)
             if data.has_key('error'):
