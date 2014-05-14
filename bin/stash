@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#! /usr/bin/python
 # -*- coding: utf-8 -*-
 import sys
 import os
@@ -305,14 +305,15 @@ class Stash(object):
                 db = self.db.tags(self.key)
             if self.REMOTE:
                 output('(remote)\n')
-                db = self.api.all()
+                db = self.api.tags(self.key)
             result = ''
-            for k, v in db.iteritems():
-                result += '%s: ' % k
-                if self.numbered:
-                    v.numbered = True
-                result += str(v)
-                result += '\n'
+            if 'result' in db:
+                for k in db['result']:
+                    result += '%s' % k
+                    result += '\n'
+
+            else:
+                output('Nothing there')
             output(result) if len(result) > 0 else output('No items found.\n')
         else:
             db = {}
@@ -321,7 +322,7 @@ class Stash(object):
                 db = self.db.alltags()
             if self.REMOTE:
                 output('(remote)\n')
-                db = self.api.all()
+                db = self.api.gettags()
             result = ''
             for tag in db:
                 result += '%s' % tag
