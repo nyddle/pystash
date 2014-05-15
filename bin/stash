@@ -89,7 +89,6 @@ class Stash(object):
     overwrite = False
 
     def __init__(self, args):
-        #self.check_installation()
         self.args = args
         self.load_config()
         self.db = ShelveStorage(db_file=self.DBFILE)
@@ -488,8 +487,10 @@ class Stash(object):
                     self.api.set(key, value, tags, False, True)
                 else:
                     output('Aborted (remote)', 'red')
-            else:
+            if ('result' in data) and (data['result'] == 'ok'):
                 output('Item has been created (remote)', 'green')
+            else:
+                output('Something went wrong somewhere... (remote)', 'red')
 
 
 
