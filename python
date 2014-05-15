@@ -1,0 +1,20 @@
+==> LICENSE <==
+The MIT License (MIT)
+
+Copyright (c) 2014 nyddle
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+
+==> st <==
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+import sys
+import os
+import shlex
+
+==> license <==
+The MIT License (MIT)
+
+Copyright (c) 2014 nyddle
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
