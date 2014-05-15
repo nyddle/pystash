@@ -11,8 +11,8 @@ from subprocess import Popen, PIPE
 from clint.textui import colored
 from clint import piped_in
 
-from stash.common import StashedItem, ShelveStorage, NotListException, output
-from stash.web import API, AlreadyLoggedIn
+from pystash.common import StashedItem, ShelveStorage, NotListException, output
+from pystash.web import API, AlreadyLoggedIn
 import getpass
 
 import requests
