@@ -1,11 +1,11 @@
 from distutils.core import setup
 
 setup(
-    name='stash',
+    name='pystash',
     version='0.0.12',
     author='Alexander Davydov',
     author_email='nyddle@gmail.com',
-    packages=['stash' ],
+    packages=[ 'pystash' ],
     scripts=[ 'bin/stash' ],
     url='http://pypi.python.org/pypi/pystash/',
     license='LICENSE.txt',
