@@ -310,13 +310,10 @@ class Stash(object):
                 output('(remote)\n')
                 db = self.api.tags(self.key)
             result = ''
-            if 'result' in db:
-                for k in db['result']:
+            if 1:
+                for k in db:
                     result += '%s' % k
                     result += '\n'
-
-            else:
-                output('Nothing there')
             output(result) if len(result) > 0 else output('No items found.\n')
         else:
             db = {}
