@@ -309,6 +309,9 @@ class Stash(object):
             if self.REMOTE:
                 output('(remote)\n')
                 db = self.api.tags(self.key)
+                if 'result' in db:
+                    db = db['result']
+
             result = ''
             if 1:
                 for k in db:
