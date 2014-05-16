@@ -192,7 +192,7 @@ class ShelveStorage(AbstractStorage):
         return True
 
     def add(self, key, value, tags):
-        self.db[key] = {'value': value, 'updated': int(time.time())}
+        self.db[key] = {'value': value, 'updated': int(time.time()), 'tags' : tags }
         self.last_update = int(time.time())
         return StashedItem(self.db[key])
 
