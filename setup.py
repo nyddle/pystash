@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='pystash',
-    version='0.0.13',
+    version='0.0.14',
     author='Alexander Davydov',
     author_email='nyddle@gmail.com',
     packages=[ 'pystash' ],
