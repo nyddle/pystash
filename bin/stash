@@ -215,6 +215,9 @@ class Stash(object):
         else:
             command = 'help'
         try:
+            if piped_data:
+                self.value = piped_data
+
             command_mapping[command]()
         except Exception as inst:
             output(inst, color="red")

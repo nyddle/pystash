@@ -91,7 +91,7 @@ class AbstractStorage(object):
         pass
 
     @abc.abstractmethod
-    def add(self, key, value):
+    def add(self, key, value, tags):
         """Returns created item as StashedItem"""
 
     @abc.abstractmethod
@@ -191,7 +191,7 @@ class ShelveStorage(AbstractStorage):
         self.last_update = int(time.time())
         return True
 
-    def add(self, key, value):
+    def add(self, key, value, tags):
         self.db[key] = {'value': value, 'updated': int(time.time())}
         self.last_update = int(time.time())
         return StashedItem(self.db[key])
