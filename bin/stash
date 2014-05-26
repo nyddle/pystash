@@ -354,6 +354,7 @@ class Stash(object):
         api = API()
         if api.logout():
             self.REMOTE = 0
+            self.LOCAL = 1
             self.save_config()
             output('Logged out of Stash\n', 'red')
         else:
