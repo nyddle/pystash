@@ -47,6 +47,8 @@ HELP = {'all': 'show all keys',
         'status': 'show the cloud sync options',
         'local [off|on]': 'turn local database on/off',
         'remote [off|on]': 'turn the cloud on/off'}
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 
 # todo; don't disable stash after first search
@@ -503,7 +505,9 @@ class Stash(object):
     def help():
         print "Usage: stash COMMAND"
         for key in HELP:
-            if len(key) > 6:
+            if len(key) > 14:
+                print("\t{0} \t\t# {1}".format(key, HELP[key]))
+            elif len(key) > 6:
                 print("\t{0} \t\t\t# {1}".format(key, HELP[key]))
             else:
                 print("\t{0} \t\t\t\t# {1}".format(key, HELP[key]))
