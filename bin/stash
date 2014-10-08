@@ -291,7 +291,7 @@ class Stash(object):
             output('(remote)\n')
             db = self.api.all()
         result = ''
-        for k, v in db.iteritems():
+        for k, v in sorted(db.iteritems()):
             result += '%s: ' % k
             if self.numbered:
                 v.numbered = True
